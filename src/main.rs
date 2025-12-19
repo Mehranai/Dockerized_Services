@@ -1,0 +1,25 @@
+use anyhow::Result;
+use tokio;
+
+use arz_axum_for_services::config::{AppConfig, AppMode};
+use arz_axum_for_services::tasks::fetch_loop::{
+    run_btc_loop,
+    run_eth_loop,
+};
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    println!("{:?}", std::env::vars().collect::<Vec<_>>());
+    let config = AppConfig::from_env();
+
+    match config.mode {
+        AppMode::Btc => {
+            run_btc_loop(config).await?;
+        }
+        AppMode::Eth => {
+            run_eth_loop(config).await?;
+        }
+    }
+
+    Ok(())
+}

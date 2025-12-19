@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8
+    container_name: clickhouse
+    volumes:
+      - ./ch-data:/var/lib/clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    environment:
+      CLICKHOUSE_USER: admin
+      CLICKHOUSE_PASSWORD: mehran.admin
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+
+  rust-app:
+    build: .
+    container_name: rust-app
+    depends_on:
+      - clickhouse
+    environment:
+      APP_MODE: ${APP_MODE}
+
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: admin
+      CLICKHOUSE_PASSWORD: mehran.admin
+
+      CLICKHOUSE_DB_BTC: btc_db
+      CLICKHOUSE_DB_ETH: eth_db
+
+      BTC_API_URL: https://blockstream.info/api
+      BTC_START_BLOCK: 831000
+      TOTAL_BTC_TXS: 500
+
+      ETH_RPC_HTTP: https://mainnet.infura.io/v3/xxxxxxxx
+      ETH_START_BLOCK: 19000000
+      TOTAL_ETH_TXS: 300
