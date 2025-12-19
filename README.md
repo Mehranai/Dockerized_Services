@@ -1,4 +1,4 @@
-## Now BTC is availabe 
+## Now BTC is availabe (Global API)
 
 ### How to run docker to store BTC data on Clickhouse DB
 
